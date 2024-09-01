@@ -828,6 +828,7 @@ require('lazy').setup({
 
   require 'custom.plugins.mini',
   require 'custom.plugins.which_key',
+  require 'custom.plugins.parinfer',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
