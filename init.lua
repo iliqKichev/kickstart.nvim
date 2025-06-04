@@ -831,6 +831,7 @@ require('lazy').setup({
   require 'custom.plugins.parinfer',
   require 'custom.plugins.lazygit',
   require 'custom.plugins.markdown-preview',
+  require 'custom.plugins.vimtex',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
