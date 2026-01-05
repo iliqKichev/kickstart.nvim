@@ -24,6 +24,27 @@ return {
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
   },
+  keys = function()
+    local dap = require 'dap'
+    local dapui = require 'dapui'
+
+    return {
+      { '<F5>', dap.continue, mode = 'n', desc = 'Debug: Start/Continue' },
+      { '<F1>', dap.step_into, mode = 'n', desc = 'Debug: Step Into' },
+      { '<F1>', dap.step_over, mode = 'n', desc = 'Debug: Step Over' },
+      { '<F3>', dap.step_out, mode = 'n', desc = 'Debug: Step Out' },
+      { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggl Breakpoint' },
+      {
+        '<leader>B',
+        function()
+          dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+        end,
+        desc = 'Debug: Set Breakpoint',
+      },
+      { '<F7>', dapui.toggle, mode = 'n', desc = 'Debug: See last session result' },
+    }
+  end,
+
   config = function()
     local mason_dap = require 'mason-nvim-dap'
     local dap = require 'dap'
