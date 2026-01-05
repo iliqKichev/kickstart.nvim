@@ -23,7 +23,8 @@ return {
     'theHamsta/nvim-dap-virtual-text',
 
     -- Add your own debuggers here
-    'leoluz/nvim-dap-go',
+    -- 'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
   },
   keys = function()
     local dap = require 'dap'
@@ -124,19 +125,19 @@ return {
     }
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+    -- vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
-      },
-    }
+    -- require('dap-go').setup {
+    --   delve = {
+    --    -- On Windows delve must be run attached or it crashes.
+    --    -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
+    --    detached = vim.fn.has 'win32' == 0,
+    --  },
+    -- }
   end,
 }
