@@ -26,6 +26,7 @@ return {
     -- 'leoluz/nvim-dap-go',
     'mfussenegger/nvim-dap-python',
   },
+
   keys = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
@@ -51,7 +52,7 @@ return {
     local mason_dap = require 'mason-nvim-dap'
     local dap = require 'dap'
     local dapui = require 'dapui'
-    local dap_virtual_text = require 'dap-virtual-text'
+    local dap_virtual_text = require 'nvim-dap-virtual-text'
 
     -- DAP Virtual Text default setup
     dap_virtual_text.setup()
@@ -73,8 +74,50 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        'cppdbg', -- C/C++
         'debugpy', -- Python
+      },
+    }
+
+    -- Dap Configs
+    dap.configurations = {
+      -- As taken from https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#c-c-rust-via-gdb
+      c = {
+        {
+          name = 'Launch',
+          type = 'gdb',
+          request = 'launch',
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+          end,
+          args = {},
+          cwd = '${workspaceFolder}',
+          stopAtBeginningOfMainProgram = false,
+        },
+        {
+          name = 'Select and Attach to process',
+          type = 'gdb',
+          request = 'attach',
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+          end,
+          pid = function()
+            local name = vim.fn.input 'Executable name (filter): '
+            return require('dap.utils').pick_process { filter = name }
+          end,
+          cwd = '${workspaceFolder}',
+        },
+        {
+          name = 'Attach to gdbserver :1234',
+          type = 'gdb',
+          request = 'attach',
+          target = 'localhost:1234',
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+        },
+      },
       python = {
         name = 'Launch File',
         type = 'python',
@@ -82,8 +125,9 @@ return {
 
         program = '${file}',
         pythonPath = function()
-          local env = os.getenv '$VIRTUAL_ENV'
-          if vim.fn.exists(env) then
+          -- use the Virtual environment if such exists otherwise it uses the default path
+          local env = os.getenv 'VIRTUAL_ENV'
+          if vim.fn.executable(env .. '/bin/python') then
             return env .. '/bin/python'
           else
             return '/usr/bin/python'
@@ -91,6 +135,10 @@ return {
         end,
       },
     }
+
+    -- Have the same configs for C++ and Rust
+    dap.configurations.cpp = dap.configurations.c
+    dap.configurations.rust = dap.configurations.c
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
