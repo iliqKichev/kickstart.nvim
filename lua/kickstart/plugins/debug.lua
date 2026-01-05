@@ -20,6 +20,7 @@ return {
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
+    'theHamsta/nvim-dap-virtual-text',
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
@@ -49,6 +50,10 @@ return {
     local mason_dap = require 'mason-nvim-dap'
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local dap_virtual_text = require 'dap-virtual-text'
+
+    -- DAP Virtual Text default setup
+    dap_virtual_text.setup()
 
     mason_dap.setup {
       -- Makes a best effort to setup the various debuggers with
