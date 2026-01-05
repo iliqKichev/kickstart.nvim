@@ -25,23 +25,43 @@ return {
     'leoluz/nvim-dap-go',
   },
   config = function()
+    local mason_dap = require 'mason-nvim-dap'
     local dap = require 'dap'
     local dapui = require 'dapui'
 
-    require('mason-nvim-dap').setup {
+    mason_dap.setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
       automatic_installation = true,
 
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
-      handlers = {},
+      handlers = {
+        function(config)
+          mason_dap.default_setup(config)
+        end,
+      },
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'debugpy', -- Python
+      python = {
+        name = 'Launch File',
+        type = 'python',
+        reques = 'launch',
+
+        program = '${file}',
+        pythonPath = function()
+          local env = os.getenv '$VIRTUAL_ENV'
+          if vim.fn.exists(env) then
+            return env .. '/bin/python'
+          else
+            return '/usr/bin/python'
+          end
+        end,
       },
     }
 
